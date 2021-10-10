@@ -1,0 +1,87 @@
+This crate implements several pathfinding, flow, and graph algorithms in Rust.
+
+Algorithms
+The algorithms are generic over their arguments.
+
+Directed graphs
+A*: find the shortest path in a weighted graph using an heuristic to guide the process.
+BFS: explore nearest successors first, then widen the search.
+DFS: explore a graph by going as far as possible, then backtrack.
+Dijkstra: find the shortest path in a weighted graph.
+Edmonds Karp: find the maximum flow in a weighted graph.
+Fringe: find the shortest path in a weighted graph using an heuristic to guide the process.
+IDA*: explore longer and longer paths in a weighted graph at the cost of multiple similar examinations.
+IDDFS: explore longer and longer paths in an unweighted graph at the cost of multiple similar examinations.
+strongly connected components: find strongly connected components in a directed graph.
+topological sorting: find an acceptable topological order in a directed graph.
+Yen: find k-shortest paths using Dijkstra.
+Undirected graphs
+connected components: find disjoint connected sets of vertices.
+Kruskal: find a minimum-spanning-tree.
+Matching
+Kuhn-Munkres (Hungarian algorithm): find the maximum (or minimum) matching in a weighted bipartite graph.
+Miscellaneous structures
+A Grid type representing a rectangular grid in which vertices can be added or removed, with automatic creation of edges between adjacent vertices.
+A Matrix type to store data of arbitrary types, with neighbour-aware methods.
+Using this crate
+In your Cargo.toml, put:
+
+[dependencies]
+pathfinding = "2.2.2"
+You can then pull your preferred algorithm (BFS in this example) using:
+
+extern crate pathfinding;
+
+use pathfinding::prelude::bfs;
+Example
+We will search the shortest path on a chess board to go from (1, 1) to (4, 6) doing only knight moves.
+
+use pathfinding::prelude::bfs;
+
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+struct Pos(i32, i32);
+
+impl Pos {
+  fn successors(&self) -> Vec<Pos> {
+    let &Pos(x, y) = self;
+    vec![Pos(x+1,y+2), Pos(x+1,y-2), Pos(x-1,y+2), Pos(x-1,y-2),
+         Pos(x+2,y+1), Pos(x+2,y-1), Pos(x-2,y+1), Pos(x-2,y-1)]
+  }
+}
+
+static GOAL: Pos = Pos(4, 6);
+let result = bfs(&Pos(1, 1), |p| p.successors(), |p| *p == GOAL);
+assert_eq!(result.expect("no path found").len(), 5);
+Note
+Several algorithms require that the numerical types used to describe edges weights implement Ord. If you wish to use Rust builtin floating-point types (such as f32) which implement PartialOrd in this context, you can wrap them into compliant types using the ordered-float crate.
+
+License
+This code is released under a dual Apache 2.0 / MIT free software license.
+
+Contributing
+You are welcome to contribute by opening issues or submitting pull requests. Please open an issue before implementing a new feature, in case it is a work in progress already or it is fit for this repository.
+
+In order to pass the continuous integration tests, your code must be formatted using the latest rustfmt with the nightly rust toolchain (available as the rustfmt-preview component of rustup).
+
+This repository use the imperative mode in commit messages, such as “Add IDDFS”, “Fix #xxx”. This style is preferred over “Added IDDFS” or “Fixed #xxx”.
+
+Re-exports
+pub use num_traits;
+Modules
+directed
+Algorithms for directed graphs.
+grid
+Rectangular grid in which vertices can be added or removed, with or without diagonal links.
+kuhn_munkres
+Compute a maximum weight maximum matching between two disjoints sets of vertices using the Kuhn-Munkres algorithm (also known as Hungarian algorithm).
+matrix
+Matrix of an arbitrary type and utilities to rotate, transpose, etc.
+prelude
+Export all public functions and structures for an easy access.
+undirected
+Algorithms for undirected graphs.
+utils
+Miscellaneous utilities
+Macros
+matrix
+The matrix! macro allows the declaration of a Matrix from static data. All rows must have the same number of columns. The data will be copied into the matrix.
