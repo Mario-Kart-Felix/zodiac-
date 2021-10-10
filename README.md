@@ -1,0 +1,1 @@
+# zodiac-Zodiac killer, unidentified American serial killer who is believed to have murdered at least five people in northern California between 1968 and 1969. An earlier murder, the stabbing death of an 18-year-old college student in Riverside, California in 1966, is also sometimes attributed to the Zodiac killer.
